@@ -1,7 +1,7 @@
 ﻿(function () {
-    window.QuillFunctions = {        
+    window.QuillFunctions = {     
         createQuill: function (
-            quillElement, toolBar, readOnly,
+            dotNetObjectRef, quillElement, toolBar, readOnly,
             placeholder, theme, formats, debugLevel) {  
 
             Quill.register('modules/blotFormatter', QuillBlotFormatter.default);
@@ -20,8 +20,15 @@
             if (formats) {
                 options.formats = formats;
             }
+            
+            var quill = new Quill(quillElement, options);
 
-            new Quill(quillElement, options);
+            console.log(quillElement);
+            console.log(dotNetObjectRef);
+
+            quill.on("text-change", () => {
+                this.editorChanged(quillElement, dotNetObjectRef);
+            });
         },
         getQuillContent: function(quillElement) {
             return JSON.stringify(quillElement.__quill.getContents());
@@ -68,6 +75,19 @@
 
             return quillElement.__quill.deleteText(editorIndex, selectionLength)
                 .concat(quillElement.__quill.insertText(editorIndex, text));
+        },
+        editorChanged: function (quillElement, dotNetHelper) {
+
+            console.log(quillElement);
+            console.log(dotNetHelper);
+
+            var html = this.getQuillHTML(quillElement);
+            console.log(html);
+
+            dotNetHelper.invokeMethodAsync("HTMLChangedEvent", html)
+                .then(data => {
+                    console.log(data);
+                });
         }
     };
 })();

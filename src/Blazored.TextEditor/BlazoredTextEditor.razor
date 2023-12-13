@@ -75,6 +75,13 @@
     [Parameter]
     public bool BottomToolbar { get; set; }
 
+    [Parameter]
+    public string HTML { get; set; }
+
+    [Parameter]
+    public EventCallback<string> HTMLChanged { get; set; }
+
+    private DotNetObjectReference<BlazoredTextEditor> ObjRef;
     private ElementReference QuillElement;
     private ElementReference ToolBar;
 
@@ -83,7 +90,10 @@
     {
         if (firstRender)
         {
+            ObjRef = DotNetObjectReference.Create(this);
+
             await Interop.CreateQuill(
+                ObjRef,
                 JSRuntime,
                 QuillElement,
                 ToolBar,
@@ -146,6 +156,12 @@
         var QuillDelta =
             await Interop.EnableQuillEditor(
                 JSRuntime, QuillElement, mode);
+    }
+
+    [JSInvokable]
+    public async Task HTMLChangedEvent(string content)
+    {
+        await HTMLChanged.InvokeAsync(content);
     }
 
 }

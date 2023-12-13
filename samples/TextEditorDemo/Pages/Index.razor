@@ -13,7 +13,9 @@
 
 <h3>Basic Example</h3>
 <BlazoredTextEditor
-    @ref="@richEditor">
+    @ref="@richEditor"
+    @bind-HTML="content"
+                    DebugLevel="error">
     <ToolbarContent>
         @((MarkupString) toolbar)
     </ToolbarContent>
@@ -21,7 +23,10 @@
         @((MarkupString) body)
     </EditorContent>
 </BlazoredTextEditor>
-<br/>
+
+<p>@content</p>
+
+@* <br/>
 <br/>
 <h3>Show the Toolbar Below the Editor</h3>
 <BlazoredTextEditor
@@ -61,13 +66,20 @@
     <EditorContent>
         @((MarkupString) body)
     </EditorContent>
-</BlazoredTextEditor>
+</BlazoredTextEditor> *@
 
 @code
 {
     BlazoredTextEditor richEditor = default!;
     string toolbar = """"...markup here..."""";
     string body = """"...markup here..."""";
+
+    string contentValue = "";
+    string content
+    {
+        get => contentValue;
+        set => contentValue = value;
+    }
 
     protected override void OnInitialized()
     {

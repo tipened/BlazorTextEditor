@@ -6,7 +6,8 @@ namespace Blazored.TextEditor
 {
     public static class Interop
     {
-        internal static ValueTask<object> CreateQuill(
+        internal static ValueTask<object> CreateQuill<T>(
+            DotNetObjectReference<T> objRef,
             IJSRuntime jsRuntime,
             ElementReference quillElement,
             ElementReference toolbar,
@@ -14,11 +15,11 @@ namespace Blazored.TextEditor
             string placeholder,
             string theme,
             string[] formats,
-            string debugLevel)
+            string debugLevel) where T : class
         {
             return jsRuntime.InvokeAsync<object>(
-                "QuillFunctions.createQuill", 
-                quillElement, toolbar, readOnly, 
+                "QuillFunctions.createQuill",
+                objRef, quillElement, toolbar, readOnly,
                 placeholder, theme, formats, debugLevel);
         }
 
@@ -27,7 +28,7 @@ namespace Blazored.TextEditor
             ElementReference quillElement)
         {
             return jsRuntime.InvokeAsync<string>(
-                "QuillFunctions.getQuillText", 
+                "QuillFunctions.getQuillText",
                 quillElement);
         }
 
@@ -36,7 +37,7 @@ namespace Blazored.TextEditor
             ElementReference quillElement)
         {
             return jsRuntime.InvokeAsync<string>(
-                "QuillFunctions.getQuillHTML", 
+                "QuillFunctions.getQuillHTML",
                 quillElement);
         }
 
@@ -45,7 +46,7 @@ namespace Blazored.TextEditor
             ElementReference quillElement)
         {
             return jsRuntime.InvokeAsync<string>(
-                "QuillFunctions.getQuillContent", 
+                "QuillFunctions.getQuillContent",
                 quillElement);
         }
 
@@ -55,7 +56,7 @@ namespace Blazored.TextEditor
             string Content)
         {
             return jsRuntime.InvokeAsync<object>(
-                "QuillFunctions.loadQuillContent", 
+                "QuillFunctions.loadQuillContent",
                 quillElement, Content);
         }
 
@@ -75,7 +76,7 @@ namespace Blazored.TextEditor
             bool mode)
         {
             return jsRuntime.InvokeAsync<object>(
-                "QuillFunctions.enableQuillEditor", 
+                "QuillFunctions.enableQuillEditor",
                 quillElement, mode);
         }
 
